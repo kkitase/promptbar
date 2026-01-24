@@ -1,0 +1,240 @@
+<!doctype html>
+<html class="light" lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Prompt Bar - Add New Prompt</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Noto+Sans+JP:wght@400;500;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#4A90E2",
+              "background-light": "#F2F4F7",
+              "background-dark": "#0F172A",
+            },
+            fontFamily: {
+              display: ["Inter", "Noto Sans JP", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "12px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Inter", "Noto Sans JP", sans-serif;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .modal-overlay {
+        background-color: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(4px);
+      }
+      input:focus,
+      textarea:focus {
+        outline: none;
+        border-color: #4a90e2;
+        ring: 2px;
+        ring-color: rgba(74, 144, 226, 0.2);
+      }
+    </style>
+    <style>
+      body {
+        min-height: max(884px, 100dvh);
+      }
+    </style>
+  </head>
+  <body
+    class="bg-background-light dark:bg-background-dark min-h-screen flex flex-col items-center justify-center p-4 origin-top scale-90"
+  >
+    <div
+      class="relative w-[300px] h-[650px] bg-white dark:bg-slate-900 rounded-[32px] shadow-2xl overflow-hidden border-[6px] border-slate-800 dark:border-slate-700"
+    >
+      <div class="flex justify-between items-center px-6 pt-3 pb-1">
+        <span class="text-xs font-semibold dark:text-white">9:41</span>
+        <div class="flex gap-1">
+          <span class="material-symbols-outlined text-[14px] dark:text-white"
+            >signal_cellular_alt</span
+          >
+          <span class="material-symbols-outlined text-[14px] dark:text-white"
+            >wifi</span
+          >
+          <span class="material-symbols-outlined text-[14px] dark:text-white"
+            >battery_full</span
+          >
+        </div>
+      </div>
+      <main class="p-4 space-y-4 filter blur-[2px]">
+        <div class="flex gap-2">
+          <div
+            class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-slate-400"
+          >
+            検索...
+          </div>
+          <button
+            class="w-12 h-12 bg-primary text-white rounded-xl flex items-center justify-center"
+          >
+            <span class="material-symbols-outlined">add</span>
+          </button>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <span
+            class="px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 dark:text-white text-sm"
+            >All</span
+          >
+          <span class="px-4 py-1.5 rounded-full bg-primary text-white text-sm"
+            >NotebookLM</span
+          >
+          <span
+            class="px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 dark:text-white text-sm"
+            >アイデア</span
+          >
+        </div>
+        <div
+          class="p-4 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm"
+        >
+          <h3 class="font-bold mb-2 dark:text-white">ポップなスライド</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 line-clamp-2">
+            背景は
+            34A853、テキストは白と黒、挿絵イラストは太めの線で描かれたポップで...
+          </p>
+        </div>
+      </main>
+      <div
+        class="absolute inset-0 modal-overlay z-10 flex flex-col justify-end"
+      >
+        <div
+          class="bg-white dark:bg-slate-900 w-full rounded-t-[32px] p-6 pb-12 shadow-2xl animate-slide-up"
+        >
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-bold text-slate-900 dark:text-white">
+              プロンプトを追加
+            </h2>
+            <button
+              class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400"
+            >
+              <span class="material-symbols-outlined text-[20px]">close</span>
+            </button>
+          </div>
+          <div class="space-y-6">
+            <div class="space-y-2">
+              <label
+                class="text-sm font-semibold text-slate-500 dark:text-slate-400 px-1"
+                >タイトル</label
+              >
+              <input
+                class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 dark:text-white text-base focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                placeholder="プロンプトのタイトル"
+                type="text"
+              />
+            </div>
+            <div class="space-y-2 relative">
+              <div class="flex justify-between items-center px-1">
+                <label
+                  class="text-sm font-semibold text-slate-500 dark:text-slate-400"
+                  >本文</label
+                >
+                <span
+                  class="text-[11px] font-medium text-slate-400 dark:text-slate-500"
+                  >0 / 2000</span
+                >
+              </div>
+              <textarea
+                class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 dark:text-white text-base focus:ring-2 focus:ring-primary focus:border-transparent transition-all resize-none"
+                placeholder="プロンプトの内容を入力..."
+                rows="5"
+              ></textarea>
+            </div>
+            <div class="space-y-3">
+              <label
+                class="text-sm font-semibold text-slate-500 dark:text-slate-400 px-1"
+                >タグを選択</label
+              >
+              <div class="flex flex-wrap gap-2">
+                <button
+                  class="px-3 py-1.5 rounded-lg border border-primary/30 bg-primary/5 text-primary text-sm font-medium"
+                >
+                  NotebookLM
+                </button>
+                <button
+                  class="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 dark:text-slate-300 text-sm font-medium"
+                >
+                  アイデア
+                </button>
+                <button
+                  class="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 dark:text-slate-300 text-sm font-medium"
+                >
+                  コード
+                </button>
+                <button
+                  class="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 dark:text-slate-300 text-sm font-medium"
+                >
+                  メール
+                </button>
+                <button
+                  class="px-3 py-1.5 rounded-lg border border-dashed border-primary text-primary text-sm font-medium flex items-center gap-1"
+                >
+                  <span class="material-symbols-outlined text-[16px]">add</span>
+                  新規タグ
+                </button>
+              </div>
+            </div>
+            <div class="flex gap-3 pt-4">
+              <button
+                class="flex-1 py-4 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold active:scale-95 transition-transform"
+              >
+                キャンセル
+              </button>
+              <button
+                class="flex-[2] py-4 rounded-xl bg-primary text-white font-bold shadow-lg shadow-primary/20 active:scale-95 transition-transform"
+              >
+                保存
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-slate-800 dark:bg-slate-600 rounded-full"
+      ></div>
+    </div>
+    <button
+      class="fixed top-4 right-4 bg-white dark:bg-slate-800 p-3 rounded-full shadow-lg border border-slate-200 dark:border-slate-700 z-50"
+      onclick="document.documentElement.classList.toggle('dark')"
+    >
+      <span class="material-symbols-outlined dark:text-white block dark:hidden"
+        >dark_mode</span
+      >
+      <span class="material-symbols-outlined text-white hidden dark:block"
+        >light_mode</span
+      >
+    </button>
+    <style>
+      @keyframes slide-up {
+        from {
+          transform: translateY(100%);
+        }
+        to {
+          transform: translateY(0);
+        }
+      }
+      .animate-slide-up {
+        animation: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+    </style>
+  </body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html class="light" lang="ja"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Prompt Library Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Noto+Sans+JP:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#3b82f6",
+                        secondary: "#60a5fa",
+                        "background-light": "#f3f4f6",
+                        "background-dark": "#0f172a",
+                        "card-light": "#ffffff",
+                        "card-dark": "#1e293b",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "Noto Sans JP", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "12px",
+                    },
+                },
+            },
+        };
+    </script>
+<style type="text/tailwindcss">
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }.pb-icon {
+            @apply relative flex items-center justify-center;
+            font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+        }
+        .pb-icon-filled {
+            font-variation-settings: 'FILL' 1, 'wght' 500;
+        }.dual-tone-icon {
+            @apply relative overflow-hidden;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }.icon-container {
+            @apply w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200;
+        }
+        .icon-container-primary {
+            @apply bg-blue-50 dark:bg-blue-900/20 text-primary;
+        }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
+<div class="max-w-[430px] mx-auto min-h-screen bg-background-light dark:bg-background-dark shadow-2xl overflow-hidden flex flex-col relative">
+<header class="px-6 pt-12 pb-4 bg-white dark:bg-slate-900 flex items-center justify-between sticky top-0 z-20 border-b border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-2.5">
+<div class="w-9 h-9 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
+<span class="material-symbols-outlined pb-icon pb-icon-filled !text-2xl">terminal</span>
+</div>
+<h1 class="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400">Prompt Bar</h1>
+</div>
+<div class="flex items-center gap-1">
+<button class="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined pb-icon text-2xl">temp_preferences_custom</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined pb-icon text-2xl">close</span>
+</button>
+</div>
+</header>
+<div class="p-4 space-y-4">
+<div class="flex gap-2">
+<div class="relative flex-1 group">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[22px] group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full pl-11 pr-4 py-3.5 bg-white dark:bg-card-dark border-none rounded-2xl shadow-sm focus:ring-2 focus:ring-primary/20 text-sm transition-all placeholder:text-slate-400" placeholder="検索..." type="text"/>
+</div>
+<button class="bg-primary text-white w-12 rounded-2xl shadow-lg shadow-blue-500/25 active:scale-95 transition-transform flex items-center justify-center" onclick="document.getElementById('add-modal').classList.remove('hidden')">
+<span class="material-symbols-outlined pb-icon !font-bold">add</span>
+</button>
+</div>
+<div class="flex gap-2 overflow-x-auto no-scrollbar py-1">
+<button class="px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap bg-white dark:bg-card-dark text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:border-primary/50 transition-colors">すべて</button>
+<button class="px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap bg-primary text-white shadow-md shadow-blue-500/20 border border-primary">NotebookLM</button>
+<button class="px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap bg-white dark:bg-card-dark text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">アイデア</button>
+<button class="px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap bg-white dark:bg-card-dark text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">コード</button>
+<button class="px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap bg-white dark:bg-card-dark text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">メール</button>
+</div>
+</div>
+<main class="flex-1 px-4 pb-24 space-y-4 overflow-y-auto">
+<div class="bg-card-light dark:bg-card-dark p-5 rounded-[24px] shadow-sm border border-slate-100 dark:border-slate-800 transition-all hover:shadow-md">
+<div class="flex justify-between items-start mb-3">
+<h3 class="text-lg font-bold leading-tight">ポップなスライド作成</h3>
+<button class="text-yellow-400">
+<span class="material-symbols-outlined pb-icon pb-icon-filled text-2xl">star</span>
+</button>
+</div>
+<p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed line-clamp-2 mb-5">
+                    背景は 34A853、テキストは白と黒、挿絵イラストは太めの線で描かれたポップでデフォルメされたイラストを希望します。
+                </p>
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center px-3 py-1 rounded-lg text-[11px] font-bold tracking-wider uppercase bg-blue-50 dark:bg-blue-900/30 text-primary border border-blue-100 dark:border-blue-800/50">
+                        NOTEBOOKLM
+                    </span>
+<div class="flex gap-2">
+<button class="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-primary transition-all group">
+<span class="material-symbols-outlined text-[20px] pb-icon group-hover:pb-icon-filled transition-all">content_copy</span>
+<span class="text-xs font-bold">Copy</span>
+</button>
+<button class="w-9 h-9 flex items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined pb-icon">more_horiz</span>
+</button>
+</div>
+</div>
+</div>
+<div class="bg-card-light dark:bg-card-dark p-5 rounded-[24px] shadow-sm border border-slate-100 dark:border-slate-800 transition-all hover:shadow-md">
+<div class="flex justify-between items-start mb-3">
+<h3 class="text-lg font-bold leading-tight">Minimalist slide deck</h3>
+<button class="text-slate-200 dark:text-slate-700 hover:text-yellow-400 transition-colors">
+<span class="material-symbols-outlined pb-icon text-2xl">star</span>
+</button>
+</div>
+<p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed line-clamp-2 mb-5">
+                    Minimalist slide deck design. "Warm Modernism" style. Background: Pure White. Text Color: Stark Charcoal.
+                </p>
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center px-3 py-1 rounded-lg text-[11px] font-bold tracking-wider uppercase bg-blue-50 dark:bg-blue-900/30 text-primary border border-blue-100 dark:border-blue-800/50">
+                        NOTEBOOKLM
+                    </span>
+<div class="flex gap-2">
+<button class="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-primary transition-all group">
+<span class="material-symbols-outlined text-[20px] pb-icon group-hover:pb-icon-filled transition-all">content_copy</span>
+<span class="text-xs font-bold">Copy</span>
+</button>
+<button class="w-9 h-9 flex items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined pb-icon">more_horiz</span>
+</button>
+</div>
+</div>
+</div>
+<div class="bg-card-light dark:bg-card-dark p-5 rounded-[24px] shadow-sm border border-slate-100 dark:border-slate-800 transition-all hover:shadow-md">
+<div class="flex justify-between items-start mb-3">
+<h3 class="text-lg font-bold leading-tight">コードリファクタリング</h3>
+<button class="text-slate-200 dark:text-slate-700 hover:text-yellow-400 transition-colors">
+<span class="material-symbols-outlined pb-icon text-2xl">star</span>
+</button>
+</div>
+<p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed line-clamp-2 mb-5">
+                    以下のコードの可読性を高め、計算量を最適化してください。また、SOLID原則に基づいた修正を提案してください。
+                </p>
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center px-3 py-1 rounded-lg text-[11px] font-bold tracking-wider uppercase bg-purple-50 dark:bg-purple-900/30 text-purple-600 border border-purple-100 dark:border-purple-800/50">
+                        コード
+                    </span>
+<div class="flex gap-2">
+<button class="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-primary transition-all group">
+<span class="material-symbols-outlined text-[20px] pb-icon group-hover:pb-icon-filled transition-all">content_copy</span>
+<span class="text-xs font-bold">Copy</span>
+</button>
+<button class="w-9 h-9 flex items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined pb-icon">more_horiz</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<nav class="absolute bottom-0 w-full h-24 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-t border-slate-200/60 dark:border-slate-800/60 px-6 flex items-start pt-4 justify-between z-10">
+<button class="flex flex-col items-center gap-1 group">
+<div class="w-12 h-1 bg-primary absolute top-0 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-center"></div>
+<span class="material-symbols-outlined pb-icon pb-icon-filled text-primary !text-[28px]">home</span>
+<span class="text-[11px] font-bold text-primary">ホーム</span>
+</button>
+<button class="flex flex-col items-center gap-1 group text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined pb-icon !text-[28px] group-hover:pb-icon-filled transition-all">folder_open</span>
+<span class="text-[11px] font-medium">フォルダ</span>
+</button>
+<button class="flex flex-col items-center gap-1 group text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined pb-icon !text-[28px] group-hover:pb-icon-filled transition-all">star</span>
+<span class="text-[11px] font-medium">お気に入り</span>
+</button>
+<button class="flex flex-col items-center gap-1 group text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined pb-icon !text-[28px] group-hover:pb-icon-filled transition-all">settings</span>
+<span class="text-[11px] font-medium">設定</span>
+</button>
+</nav>
+<div class="hidden absolute inset-0 z-50 flex items-end justify-center bg-slate-900/60 backdrop-blur-sm" id="add-modal">
+<div class="w-full bg-white dark:bg-slate-900 rounded-t-[32px] p-8 shadow-2xl">
+<div class="w-12 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mb-8"></div>
+<div class="flex items-center justify-between mb-8">
+<h2 class="text-2xl font-bold">プロンプトを保存</h2>
+<button class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500" onclick="document.getElementById('add-modal').classList.add('hidden')">
+<span class="material-symbols-outlined pb-icon">close</span>
+</button>
+</div>
+<div class="space-y-6">
+<div>
+<label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">タイトル</label>
+<input class="w-full px-5 py-4 bg-slate-50 dark:bg-slate-800 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 placeholder:text-slate-400" placeholder="プロンプトのタイトル" type="text"/>
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">本文</label>
+<textarea class="w-full px-5 py-4 bg-slate-50 dark:bg-slate-800 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 placeholder:text-slate-400 min-h-[120px]" placeholder="プロンプトの内容を入力..." rows="4"></textarea>
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">タグ</label>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-medium">NotebookLM</span>
+<span class="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-medium">アイデア</span>
+<span class="px-3 py-1.5 rounded-xl border border-primary/40 text-primary text-sm font-bold flex items-center gap-1.5 bg-blue-50/50 dark:bg-blue-900/10">
+<span class="material-symbols-outlined text-[18px]">add</span>新規タグ
+                            </span>
+</div>
+</div>
+<div class="flex gap-4 pt-4 pb-6">
+<button class="flex-1 py-4 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold rounded-2xl active:opacity-70 transition-all" onclick="document.getElementById('add-modal').classList.add('hidden')">キャンセル</button>
+<button class="flex-1 py-4 bg-primary text-white font-bold rounded-2xl shadow-xl shadow-blue-500/30 active:scale-[0.98] transition-all">保存する</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fixed bottom-6 right-6 z-50">
+<button class="w-14 h-14 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl shadow-2xl flex items-center justify-center transition-all active:scale-90" onclick="document.documentElement.classList.toggle('dark')">
+<span class="material-symbols-outlined pb-icon dark:hidden text-[28px] pb-icon-filled">dark_mode</span>
+<span class="material-symbols-outlined pb-icon hidden dark:block text-[28px] pb-icon-filled">light_mode</span>
+</button>
+</div>
+
+</body></html>

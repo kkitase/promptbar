@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prompt Bar</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- ヘッダー -->
+      <header class="header">
+        <div class="header-left">
+          <div class="logo">
+            <span class="material-symbols-outlined filled">terminal</span>
+          </div>
+          <h1 class="header-title">Prompt Bar</h1>
+        </div>
+        <div class="header-actions">
+          <button class="btn-header" id="darkModeBtn" title="ダークモード切替">
+            <span class="material-symbols-outlined" id="darkModeIcon"
+              >dark_mode</span
+            >
+          </button>
+        </div>
+      </header>
+
+      <!-- 検索 & 追加 -->
+      <div class="search-section">
+        <div class="search-box">
+          <span class="material-symbols-outlined">search</span>
+          <input type="text" id="searchInput" placeholder="検索..." />
+        </div>
+        <button id="addBtn" class="btn-add" title="新規追加">
+          <span class="material-symbols-outlined">add</span>
+        </button>
+      </div>
+
+      <!-- タグフィルター -->
+      <div class="tag-filters" id="tagFilters">
+        <button class="tag-filter active" data-tag="all">すべて</button>
+      </div>
+
+      <!-- プロンプト一覧 -->
+      <main class="prompt-list" id="promptList">
+        <!-- プロンプトカードがここに動的に追加される -->
+      </main>
+
+      <!-- 空状態 -->
+      <div class="empty-state" id="emptyState">
+        <div class="empty-state-icon">
+          <span class="material-symbols-outlined">description</span>
+        </div>
+        <h3>プロンプトがありません</h3>
+        <p>右上の「+」ボタンから追加してください</p>
+      </div>
+    </div>
+
+    <!-- 追加/編集モーダル -->
+    <div class="modal-overlay" id="modalOverlay">
+      <div class="modal">
+        <div class="modal-handle"></div>
+        <div class="modal-header">
+          <h2 id="modalTitle">プロンプトを追加</h2>
+          <button class="modal-close" id="modalClose">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <form id="promptForm">
+          <div class="form-group">
+            <label for="titleInput">タイトル</label>
+            <input
+              type="text"
+              id="titleInput"
+              required
+              placeholder="プロンプトのタイトル"
+            />
+          </div>
+          <div class="form-group">
+            <div class="form-label-row">
+              <label for="bodyInput">本文</label>
+              <span class="char-count" id="charCount">0 / 10000</span>
+            </div>
+            <textarea
+              id="bodyInput"
+              required
+              placeholder="プロンプトの内容を入力..."
+              maxlength="10000"
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label>タグを選択</label>
+            <div class="tag-selector" id="tagSelector">
+              <!-- タグが動的に追加される -->
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn-cancel" id="cancelBtn">
+              キャンセル
+            </button>
+            <button type="submit" class="btn-save">保存</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- 削除確認モーダル -->
+    <div class="modal-overlay" id="deleteModalOverlay">
+      <div class="modal modal-small">
+        <div class="modal-header">
+          <h2>削除の確認</h2>
+        </div>
+        <p class="delete-message">
+          このプロンプトを削除しますか？<br />この操作は取り消せません。
+        </p>
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" id="deleteCancelBtn">
+            キャンセル
+          </button>
+          <button type="button" class="btn-delete" id="deleteConfirmBtn">
+            削除
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- トースト通知 -->
+    <div class="toast" id="toast">
+      <span class="material-symbols-outlined filled">check_circle</span>
+      <span id="toastMessage">コピーしました</span>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
