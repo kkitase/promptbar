@@ -170,16 +170,25 @@ function renderTagFilters() {
 // プロンプト一覧の描画
 function renderPrompts() {
   const searchTerm = elements.searchInput.value.toLowerCase();
-  const filtered = prompts.filter((prompt) => {
-    const matchesSearch =
-      !searchTerm ||
-      prompt.title.toLowerCase().includes(searchTerm) ||
-      prompt.body.toLowerCase().includes(searchTerm);
-    const matchesTag =
-      currentFilter === "all" ||
-      (prompt.tags && prompt.tags.includes(currentFilter));
-    return matchesSearch && matchesTag;
-  });
+  const filtered = prompts
+    .filter((prompt) => {
+      const matchesSearch =
+        !searchTerm ||
+        prompt.title.toLowerCase().includes(searchTerm) ||
+        prompt.body.toLowerCase().includes(searchTerm);
+      const matchesTag =
+        currentFilter === "all" ||
+        (prompt.tags && prompt.tags.includes(currentFilter));
+      return matchesSearch && matchesTag;
+    })
+    // お気に入りを先に、その後最近追加順でソート
+    .sort((a, b) => {
+      // お気に入りを優先
+      if (a.favorite && !b.favorite) return -1;
+      if (!a.favorite && b.favorite) return 1;
+      // 同じ場合は最近追加順（createdAt降順）
+      return (b.createdAt || 0) - (a.createdAt || 0);
+    });
 
   if (filtered.length === 0) {
     elements.promptList.innerHTML = "";

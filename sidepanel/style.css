@@ -9,10 +9,10 @@
   --primary-light: rgba(59, 130, 246, 0.1);
   --primary-shadow: rgba(59, 130, 246, 0.25);
 
-  --bg-main: #f3f4f6;
+  --bg-main: #f8fafc;
   --bg-card: #ffffff;
-  --bg-input: #f8fafc;
-  --bg-hover: #f1f5f9;
+  --bg-input: #f1f5f9;
+  --bg-hover: #e2e8f0;
 
   --border-color: #e2e8f0;
   --border-light: #f1f5f9;
@@ -35,9 +35,9 @@
 
 /* Dark Mode */
 .dark {
-  --bg-main: #0f172a;
-  --bg-card: #1e293b;
-  --bg-input: #334155;
+  --bg-main: #020617;
+  --bg-card: #0f172a;
+  --bg-input: #1e293b;
   --bg-hover: #334155;
 
   --border-color: #334155;
@@ -102,81 +102,55 @@ body {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  max-width: 430px;
-  margin: 0 auto;
+  width: 100%;
 }
 
-/* Header */
-.header {
+/* Action Buttons in Search Section */
+.action-buttons {
   display: flex;
+  gap: 8px;
   align-items: center;
-  justify-content: space-between;
-  padding: 16px 16px 12px;
-  background: var(--bg-card);
-  border-bottom: 1px solid var(--border-color);
-  position: sticky;
-  top: 0;
-  z-index: 20;
-}
-
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
 }
 
 .logo {
-  width: 36px;
-  height: 36px;
-  background: var(--primary);
-  border-radius: var(--radius-md);
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  box-shadow: var(--shadow-primary);
+  flex-shrink: 0;
 }
 
-.logo .material-symbols-outlined {
-  font-size: 22px;
-}
-
-.header-title {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  background: linear-gradient(
-    135deg,
-    var(--text-primary),
-    var(--text-secondary)
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.header-actions {
-  display: flex;
-  gap: 4px;
+.logo img {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-header {
   width: 40px;
   height: 40px;
   border: none;
-  background: transparent;
-  border-radius: var(--radius-md);
+  background: var(--bg-input);
+  border-radius: var(--radius-lg);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--text-muted);
   transition: all 0.2s;
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-header:hover {
   background: var(--bg-hover);
   color: var(--primary);
+  transform: translateY(-1px);
+}
+
+.btn-header .material-symbols-outlined {
+  font-size: 20px;
 }
 
 /* Search & Add Section */
@@ -184,7 +158,7 @@ body {
   display: flex;
   gap: 8px;
   padding: 16px;
-  background: var(--bg-card);
+  background: transparent;
 }
 
 .search-box {
@@ -370,6 +344,7 @@ body {
   color: var(--text-secondary);
   line-height: 1.6;
   display: -webkit-box;
+  line-clamp: 2;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;

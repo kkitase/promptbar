@@ -8,32 +8,21 @@
   </head>
   <body>
     <div class="container">
-      <!-- ヘッダー -->
-      <header class="header">
-        <div class="header-left">
-          <div class="logo">
-            <span class="material-symbols-outlined filled">terminal</span>
-          </div>
-          <h1 class="header-title">Prompt Bar</h1>
-        </div>
-        <div class="header-actions">
-          <button class="btn-header" id="darkModeBtn" title="ダークモード切替">
-            <span class="material-symbols-outlined" id="darkModeIcon"
-              >dark_mode</span
-            >
-          </button>
-        </div>
-      </header>
-
-      <!-- 検索 & 追加 -->
       <div class="search-section">
         <div class="search-box">
           <span class="material-symbols-outlined">search</span>
           <input type="text" id="searchInput" placeholder="検索..." />
         </div>
-        <button id="addBtn" class="btn-add" title="新規追加">
-          <span class="material-symbols-outlined">add</span>
-        </button>
+        <div class="action-buttons">
+          <button class="btn-header" id="darkModeBtn" title="ダークモード切替">
+            <span class="material-symbols-outlined" id="darkModeIcon"
+              >dark_mode</span
+            >
+          </button>
+          <button id="addBtn" class="btn-add" title="新規追加">
+            <span class="material-symbols-outlined">add</span>
+          </button>
+        </div>
       </div>
 
       <!-- タグフィルター -->
