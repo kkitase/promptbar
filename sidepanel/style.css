@@ -796,3 +796,123 @@ body {
 .dark-mode-toggle:active {
   transform: scale(0.95);
 }
+
+/* Dropdown Menu */
+.menu-wrapper {
+  position: relative;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  z-index: 50;
+  min-width: 180px;
+  padding: 6px;
+  animation: fadeIn 0.15s ease;
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.dropdown-item:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.dropdown-item .material-symbols-outlined {
+  font-size: 20px;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: 4px 0;
+}
+
+/* Drag & Drop */
+.prompt-card {
+  cursor: grab;
+}
+
+.prompt-card.dragging {
+  opacity: 0.4;
+  cursor: grabbing;
+}
+
+.prompt-card.drag-over {
+  border-top: 2px solid var(--primary);
+  margin-top: -2px;
+}
+
+/* Preview Modal */
+.preview-content {
+  padding: 16px 24px 24px;
+}
+
+.preview-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.preview-body {
+  background: var(--bg-input);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text-primary);
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  max-height: 50vh;
+  overflow-y: auto;
+  margin-bottom: 20px;
+}
+
+.preview-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.preview-actions .btn-cancel,
+.preview-actions .btn-save {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: auto;
+  padding: 8px 20px;
+}

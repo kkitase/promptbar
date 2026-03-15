@@ -29,8 +29,20 @@ const elements = {
   deleteConfirmBtn: document.getElementById("deleteConfirmBtn"),
   toast: document.getElementById("toast"),
   toastMessage: document.getElementById("toastMessage"),
-  darkModeBtn: document.getElementById("darkModeBtn"),
   darkModeIcon: document.getElementById("darkModeIcon"),
+  menuBtn: document.getElementById("menuBtn"),
+  dropdownMenu: document.getElementById("dropdownMenu"),
+  importBtn: document.getElementById("importBtn"),
+  exportBtn: document.getElementById("exportBtn"),
+  darkModeBtnMenu: document.getElementById("darkModeBtnMenu"),
+  fileInput: document.getElementById("fileInput"),
+  previewModalOverlay: document.getElementById("previewModalOverlay"),
+  previewTitle: document.getElementById("previewTitle"),
+  previewBody: document.getElementById("previewBody"),
+  previewTags: document.getElementById("previewTags"),
+  previewClose: document.getElementById("previewClose"),
+  previewEditBtn: document.getElementById("previewEditBtn"),
+  previewCopyBtn: document.getElementById("previewCopyBtn"),
 };
 
 // 状態管理
@@ -39,7 +51,9 @@ let tags = [...DEFAULT_TAGS];
 let currentFilter = "all";
 let editingPromptId = null;
 let deletingPromptId = null;
+let previewingPromptId = null;
 let isDarkMode = false;
+let draggedCard = null;
 
 // 初期化
 document.addEventListener("DOMContentLoaded", init);
@@ -103,8 +117,31 @@ function setupEventListeners() {
   // 追加ボタン
   elements.addBtn.addEventListener("click", openAddModal);
 
-  // ダークモード切り替え
-  elements.darkModeBtn.addEventListener("click", toggleDarkMode);
+  // メニュー
+  elements.menuBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    elements.dropdownMenu.classList.toggle("show");
+  });
+  document.addEventListener("click", () => {
+    elements.dropdownMenu.classList.remove("show");
+  });
+
+  // インポート・エクスポート
+  elements.importBtn.addEventListener("click", () => {
+    elements.dropdownMenu.classList.remove("show");
+    elements.fileInput.click();
+  });
+  elements.fileInput.addEventListener("change", handleImport);
+  elements.exportBtn.addEventListener("click", () => {
+    elements.dropdownMenu.classList.remove("show");
+    handleExport();
+  });
+
+  // ダークモード切り替え（メニュー内）
+  elements.darkModeBtnMenu.addEventListener("click", () => {
+    elements.dropdownMenu.classList.remove("show");
+    toggleDarkMode();
+  });
 
   // モーダル関連
   elements.modalClose.addEventListener("click", closeModal);
@@ -126,15 +163,124 @@ function setupEventListeners() {
     if (e.target === elements.deleteModalOverlay) closeDeleteModal();
   });
 
+  // プレビューモーダル
+  elements.previewClose.addEventListener("click", closePreviewModal);
+  elements.previewModalOverlay.addEventListener("click", (e) => {
+    if (e.target === elements.previewModalOverlay) closePreviewModal();
+  });
+  elements.previewCopyBtn.addEventListener("click", () => {
+    if (previewingPromptId) copyToClipboard(previewingPromptId);
+  });
+  elements.previewEditBtn.addEventListener("click", () => {
+    if (previewingPromptId) {
+      closePreviewModal();
+      openEditModal(previewingPromptId);
+    }
+  });
+
   // キーボードショートカット
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
       closeModal();
       closeDeleteModal();
+      closePreviewModal();
     }
   });
+}
 
-  // （ドロップダウン廃止に伴い不要な処理を削除）
+// === インポート・エクスポート ===
+
+function handleExport() {
+  const data = {
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    prompts: prompts,
+    tags: tags,
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {
+    type: "application/json",
+  });
+  const url = URL.createObjectURL(blob);
+  const today = new Date().toISOString().slice(0, 10);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `promptbar-export-${today}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast("エクスポートしました");
+}
+
+async function handleImport(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  try {
+    const text = await file.text();
+    const data = JSON.parse(text);
+
+    let importedPrompts = [];
+    let importedTags = [];
+
+    if (Array.isArray(data.prompts)) {
+      importedPrompts = data.prompts;
+      importedTags = data.tags || [];
+    } else if (Array.isArray(data)) {
+      importedPrompts = data;
+    } else {
+      showToast("無効なファイル形式です");
+      return;
+    }
+
+    // IDがないプロンプトにIDを付与、既存IDとの重複を避ける
+    const existingIds = new Set(prompts.map((p) => p.id));
+    for (const p of importedPrompts) {
+      if (!p.id || existingIds.has(p.id)) {
+        p.id = generateId();
+      }
+      existingIds.add(p.id);
+      if (!p.createdAt) p.createdAt = Date.now();
+      if (!p.updatedAt) p.updatedAt = Date.now();
+      if (p.favorite === undefined) p.favorite = false;
+      if (!Array.isArray(p.tags)) p.tags = [];
+    }
+
+    prompts = [...prompts, ...importedPrompts];
+
+    // タグをマージ
+    const newTags = importedTags.filter((t) => !tags.includes(t));
+    tags = [...tags, ...newTags];
+
+    await saveData();
+    renderTagFilters();
+    renderPrompts();
+    showToast(`${importedPrompts.length}件インポートしました`);
+  } catch (error) {
+    console.error("インポートに失敗しました:", error);
+    showToast("インポートに失敗しました");
+  }
+
+  // ファイル入力をリセット
+  elements.fileInput.value = "";
+}
+
+// === プレビュー ===
+
+function openPreviewModal(promptId) {
+  const p = prompts.find((item) => item.id === promptId);
+  if (!p) return;
+
+  previewingPromptId = promptId;
+  elements.previewTitle.textContent = p.title;
+  elements.previewBody.textContent = p.body;
+  elements.previewTags.innerHTML = (p.tags || [])
+    .map((tag) => `<span class="prompt-tag">${escapeHtml(tag)}</span>`)
+    .join("");
+  elements.previewModalOverlay.classList.add("show");
+}
+
+function closePreviewModal() {
+  elements.previewModalOverlay.classList.remove("show");
+  previewingPromptId = null;
 }
 
 // 文字数カウンターの更新
@@ -183,10 +329,8 @@ function renderPrompts() {
     })
     // お気に入りを先に、その後最近追加順でソート
     .sort((a, b) => {
-      // お気に入りを優先
       if (a.favorite && !b.favorite) return -1;
       if (!a.favorite && b.favorite) return 1;
-      // 同じ場合は最近追加順（createdAt降順）
       return (b.createdAt || 0) - (a.createdAt || 0);
     });
 
@@ -200,7 +344,7 @@ function renderPrompts() {
   elements.promptList.innerHTML = filtered
     .map(
       (prompt) => `
-    <div class="prompt-card" data-id="${prompt.id}">
+    <div class="prompt-card" data-id="${prompt.id}" draggable="true">
       <div class="prompt-card-header">
         <span class="prompt-title">${escapeHtml(prompt.title)}</span>
         <button class="btn-favorite ${prompt.favorite ? "active" : ""}" data-action="favorite" title="お気に入り">
@@ -229,10 +373,18 @@ function renderPrompts() {
     )
     .join("");
 
-  // カードのクリックイベント
+  // カードのイベント設定
   elements.promptList.querySelectorAll(".prompt-card").forEach((card) => {
     const promptId = card.dataset.id;
 
+    // カード本体クリックでプレビュー
+    card.addEventListener("click", (e) => {
+      // ボタンクリック時はプレビューを開かない
+      if (e.target.closest("[data-action]")) return;
+      openPreviewModal(promptId);
+    });
+
+    // アクションボタン
     card.querySelectorAll("[data-action]").forEach((btn) => {
       btn.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -253,6 +405,52 @@ function renderPrompts() {
             break;
         }
       });
+    });
+
+    // ドラッグ&ドロップ
+    card.addEventListener("dragstart", (e) => {
+      draggedCard = card;
+      card.classList.add("dragging");
+      e.dataTransfer.effectAllowed = "move";
+    });
+
+    card.addEventListener("dragend", () => {
+      card.classList.remove("dragging");
+      elements.promptList
+        .querySelectorAll(".drag-over")
+        .forEach((el) => el.classList.remove("drag-over"));
+      draggedCard = null;
+    });
+
+    card.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "move";
+      if (draggedCard && draggedCard !== card) {
+        card.classList.add("drag-over");
+      }
+    });
+
+    card.addEventListener("dragleave", () => {
+      card.classList.remove("drag-over");
+    });
+
+    card.addEventListener("drop", async (e) => {
+      e.preventDefault();
+      card.classList.remove("drag-over");
+      if (!draggedCard || draggedCard === card) return;
+
+      const fromId = draggedCard.dataset.id;
+      const toId = card.dataset.id;
+      const fromIndex = prompts.findIndex((p) => p.id === fromId);
+      const toIndex = prompts.findIndex((p) => p.id === toId);
+
+      if (fromIndex === -1 || toIndex === -1) return;
+
+      const [moved] = prompts.splice(fromIndex, 1);
+      prompts.splice(toIndex, 0, moved);
+
+      await saveData();
+      renderPrompts();
     });
   });
 }
@@ -416,11 +614,11 @@ async function confirmDelete() {
 
 // クリップボードにコピー
 async function copyToClipboard(promptId) {
-  const prompt = prompts.find((p) => p.id === promptId);
-  if (!prompt) return;
+  const p = prompts.find((item) => item.id === promptId);
+  if (!p) return;
 
   try {
-    await navigator.clipboard.writeText(prompt.body);
+    await navigator.clipboard.writeText(p.body);
     showToast("コピーしました");
   } catch (error) {
     console.error("コピーに失敗しました:", error);
@@ -446,7 +644,7 @@ function getAllTags() {
 
 // ユーティリティ関数
 function generateId() {
-  return Date.now().toString(36) + Math.random().toString(36).substr(2);
+  return Date.now().toString(36) + Math.random().toString(36).substring(2);
 }
 
 function escapeHtml(text) {

@@ -14,11 +14,27 @@
           <input type="text" id="searchInput" placeholder="検索..." />
         </div>
         <div class="action-buttons">
-          <button class="btn-header" id="darkModeBtn" title="ダークモード切替">
-            <span class="material-symbols-outlined" id="darkModeIcon"
-              >dark_mode</span
-            >
-          </button>
+          <div class="menu-wrapper">
+            <button class="btn-header" id="menuBtn" title="メニュー">
+              <span class="material-symbols-outlined">more_vert</span>
+            </button>
+            <div class="dropdown-menu" id="dropdownMenu">
+              <button class="dropdown-item" id="importBtn">
+                <span class="material-symbols-outlined">upload</span>
+                インポート
+              </button>
+              <button class="dropdown-item" id="exportBtn">
+                <span class="material-symbols-outlined">download</span>
+                エクスポート
+              </button>
+              <div class="dropdown-divider"></div>
+              <button class="dropdown-item" id="darkModeBtnMenu">
+                <span class="material-symbols-outlined" id="darkModeIcon">dark_mode</span>
+                ダークモード
+              </button>
+            </div>
+          </div>
+          <input type="file" id="fileInput" accept=".json" style="display: none" />
           <button id="addBtn" class="btn-add" title="新規追加">
             <span class="material-symbols-outlined">add</span>
           </button>
@@ -109,6 +125,33 @@
           <button type="button" class="btn-delete" id="deleteConfirmBtn">
             削除
           </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- プレビューモーダル -->
+    <div class="modal-overlay" id="previewModalOverlay">
+      <div class="modal">
+        <div class="modal-handle"></div>
+        <div class="modal-header">
+          <h2 id="previewTitle">プレビュー</h2>
+          <button class="modal-close" id="previewClose">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <div class="preview-content">
+          <div class="preview-tags" id="previewTags"></div>
+          <pre class="preview-body" id="previewBody"></pre>
+          <div class="preview-actions">
+            <button class="btn-cancel" id="previewEditBtn">
+              <span class="material-symbols-outlined" style="font-size:16px">edit</span>
+              編集
+            </button>
+            <button class="btn-save" id="previewCopyBtn">
+              <span class="material-symbols-outlined" style="font-size:16px">content_copy</span>
+              コピー
+            </button>
+          </div>
         </div>
       </div>
     </div>
